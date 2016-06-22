@@ -11,6 +11,17 @@ Base = declarative_base()
 
 Session = sessionmaker(bind=engine)
 
+class CricketBase(object):
+
+    def __repr__(self):
+        return '{}<{}>'.format(self.__class__, self.__dict__)
+
+    def as_dict(self, columns=None):
+        if not columns:
+            columns = [c.name for c in self.__table__.columns]
+        model_dict = {column: getattr(self, column) for column in columns}
+        return model_dict
+
 def create_all():
     metadata = Base.metadata
     tables = metadata.sorted_tables

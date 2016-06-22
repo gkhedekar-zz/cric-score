@@ -1,0 +1,62 @@
+<html>
+    <body>
+        <form name="new_ball" method="POST" action="{{ url_for('new_ball') }}">
+            <table border="1">
+                <tr>
+                    <td>{{ match.team1_name }} vs {{match.team2_name}}</td>
+                <tr>
+                <tr>
+                    <td>Ground: {{match.ground}}</td>
+                <tr>
+                <tr>
+                    <td>Num of Overs: {{match.num_overs}}</td>
+                <tr>
+            </table>
+
+            {% if match.team1.name == match.first_inning %}
+                {% set batting_team = match.team1 %}
+                {% set bowling_team = match.team2 %}
+            {% else %}
+                {% set batting_team = match.team2 %}
+                {% set bowling_team = match.team1 %}
+            {% endif %}
+            <h3>Batting team: {{ batting_team.name }}</h3>
+            <table border="1">
+                <tr>
+                    <th>id</th>
+                    <th>Player Name</th>
+                    <th>Runs</th>
+                    <th>Balls played</th>
+                </tr>
+                {% for player in batting_team.players %}
+                <tr>
+                    <td>{{ player.id }}</td>
+                    <td>{{ player.name }}</td>
+                    <td></td>
+                    <td></td>
+                <tr>
+                {% endfor %}
+            </table>
+
+            <h3>Bowling team: {{ bowling_team.name }}</h3>
+            <table border="1">
+                <tr>
+                    <th>id</th>
+                    <th>Player Name</th>
+                    <th>Overs</th>
+                    <th>Runs</th>
+                    <th>Wides</th>
+                </tr>
+                {% for player in bowling_team.players %}
+                <tr>
+                    <td>{{ player.id }}</td>
+                    <td>{{ player.name }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                <tr>
+                {% endfor %}
+            </table>
+        </form>
+    </body>
+</html>

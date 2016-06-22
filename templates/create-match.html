@@ -1,0 +1,58 @@
+<html>
+    <body>
+        <form name="create_match" method="POST" action="{{ url_for('create_match') }}">
+            <table>
+                <tr>
+                    <td><label>Match Date</label></td>
+                    <td><input type="text" name="time" value='{{ data.time }}' /></td>
+                </tr>
+                <tr>
+                    <td><label>Ground</label></td>
+                    <td><input type="text" name="ground" /></td>
+                </tr>
+                <tr>
+                    <td><label>Num of Overs</label></td>
+                    <td><select name="num_overs">
+                        <option>16</option>
+                        <option>20</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label>Team1</label></td>
+                    <td><select name="team1">
+                        {% for team in data.teams %}
+                            <option>{{ team.name }}</option>
+                        {% endfor %}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label>Team2</label></td>
+                    <td><select name="team2">
+                        {% for team in data.teams %}
+                            <option>{{ team.name }}</option>
+                        {% endfor %}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label>Toss Winner</label></td>
+                    <td><select name="toss_winner">
+                        {% for team in data.teams %}
+                            <option>{{ team.name }}</option>
+                        {% endfor %}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><label>First Batting</label></td>
+                    <td><select name="first_inning">
+                        {% for team in data.teams %}
+                            <option>{{ team.name }}</option>
+                        {% endfor %}
+                    </select></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="create_match" value="Create"></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
