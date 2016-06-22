@@ -40,8 +40,8 @@ def scoped_session():
         session = Session()
         yield session
         session.commit()
-    except Exception:
-        print "Error occured while conencting to the database"
+    except Exception as e:
+        print "Error occured while conencting to the database {}".format(str(e))
         session.rollback()
         raise
     finally:

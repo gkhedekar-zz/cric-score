@@ -68,9 +68,10 @@ def update_players(team_name):
     datastore.Player.update_players(players)
     return redirect(url_for('get_team', team_name=team_name))
 
-@app.route('/new_ball', methods=['POST'])
-def new_ball():
-    return True
+@app.route('/new_ball/<match_id>', methods=['POST'])
+def new_ball(match_id):
+    datastore.Ball.create_ball(match_id, request.form)
+    return redirect(url_for('show_match', match_id=match_id))
 
 if __name__ == "__main__":
     app.run(debug=True)

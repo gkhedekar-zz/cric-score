@@ -1,7 +1,6 @@
 <html>
     <body>
-        <form name="new_ball" method="POST" action="{{ url_for('new_ball') }}">
-            <table border="1">
+            <table>
                 <tr>
                     <td>{{ match.team1_name }} vs {{match.team2_name}}</td>
                 <tr>
@@ -57,6 +56,37 @@
                 <tr>
                 {% endfor %}
             </table>
-        </form>
+
+            <form name="new_ball" method="POST" action="{{ url_for('new_ball', match_id=match.id) }}">
+                <table>
+                    <tr>
+                        <td>Ball Num</td>
+                        <td><input type="text" name="ball_num"></td>
+                    </tr>
+                    <tr>
+                        <td>Bowler</td>
+                        <td><input type="text" name="bowler_id"></td>
+                    </tr>
+                    <tr>
+                        <td>Batsman</td>
+                        <td><input type="text" name="batsman_id"></td>
+                    </tr>
+                    <tr>
+                        <td>Runs</td>
+                        <td><input type="text" name="runs"></td>
+                    </tr>
+                    <tr>
+                        <td>is Wide?</td>
+                        <td><input type="text" name="is_wide"></td>
+                    </tr>
+                    <tr>
+                        <td>is No?</td>
+                        <td><input type="text" name="is_no_ball"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" name="add_ball" value="Add Ball" /></td>
+                    </tr>
+                </table>
+            </form>
     </body>
 </html>
