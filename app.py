@@ -18,30 +18,37 @@ def get_team(team_name):
     except Exception as e:
         return str(e)
 
-@app.route('/create_team/<team_name>')
-def create_team(team_name):
+@app.route('/create_team', methods=['POST'])
+def create_team():
     try:
+        team_name = request.form['team_name']
         datastore.Team.create_team(team_name)
-        return "Success"
+        return redirect(url_for('home'))
     except Exception as e:
         return str(e)
 
-@app.route('/create_match', methods=['GET', 'POST'])
-def create_match():
+@app.route('/home', methods=['GET', 'POST'])
+def home():
     try:
-        if request.method == 'GET':
-            teams = datastore.Team.get_teams()
-            content = {
-                'teams': teams,
-                'time': datetime.now().date(),
-            }
-            return render_template('create-match.html', data=content)
-        elif request.method == 'POST':
-            
-                match_id = datastore.Match.create_match(request.form)
-                return redirect(url_for('show_match', match_id=match_id))
+        teams = datastore.Team.get_teams()
+        matches = datastore.Match.get_matches()
+        content = {
+            'teams': teams,
+            'matches': matches,
+            'time': datetime.now().date(),
+        }
+        return render_template('home.html', data=content)
     except Exception as e:
         return str(e)
+
+@app.route('/create_match', methods=['POST'])
+def create_match():
+    try:
+        match_id = datastore.Match.create_match(request.form)
+        return redirect(url_for('show_match', match_id=match_id))
+    except Exception as e:
+        return str(e)
+
 
 @app.route('/match/<match_id>', methods=['GET', 'POST'])
 def show_match(match_id):

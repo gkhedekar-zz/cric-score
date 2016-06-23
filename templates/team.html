@@ -1,5 +1,6 @@
 <html>
     <body>
+        <a href="{{ url_for('home') }}">Home</a>
         <form name="team_info" method="POST" action="{{ url_for('update_players', team_name=team.name) }}">
         <label for="team_name">Team Name: {{ team.name }}</label>
         <table>

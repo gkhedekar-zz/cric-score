@@ -1,5 +1,7 @@
 <html>
     <body>
+
+            <a href="{{ url_for('home') }}">Home</a>
             <table>
                 <tr>
                     <td>{{ match.team1_name }} vs {{match.team2_name}}</td>
@@ -20,6 +22,7 @@
                 {% set bowling_team = match.team1 %}
             {% endif %}
             <h3>Batting team: {{ batting_team.name }}</h3>
+            <h4>Total Runs: {{ match.total_runs }}  Last Ball: {{ match.last_ball }}</h4>
             <table border="1">
                 <tr>
                     <th>id</th>
@@ -31,13 +34,14 @@
                 <tr>
                     <td>{{ player.id }}</td>
                     <td>{{ player.name }}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ match.batting_score[player.id].runs }}</td>
+                    <td>{{ match.batting_score[player.id].balls }}</td>
                 <tr>
                 {% endfor %}
             </table>
 
             <h3>Bowling team: {{ bowling_team.name }}</h3>
+            <h4>Overs: {{ match.over}}</h4>
             <table border="1">
                 <tr>
                     <th>id</th>
@@ -50,8 +54,8 @@
                 <tr>
                     <td>{{ player.id }}</td>
                     <td>{{ player.name }}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ match.bowling_score[player.id].overs }}</td>
+                    <td>{{ match.bowling_score[player.id].runs }}</td>
                     <td></td>
                 <tr>
                 {% endfor %}
@@ -61,11 +65,11 @@
                 <table>
                     <tr>
                         <td>Ball Num</td>
-                        <td><input type="text" name="ball_num"></td>
+                        <td><input type="text" name="ball_num" value="{{ match.next_ball }}"></td>
                     </tr>
                     <tr>
                         <td>Bowler</td>
-                        <td><input type="text" name="bowler_id"></td>
+                        <td><input type="text" name="bowler_id" value="{{ match.current_bowler }}"></td>
                     </tr>
                     <tr>
                         <td>Batsman</td>
@@ -77,11 +81,11 @@
                     </tr>
                     <tr>
                         <td>is Wide?</td>
-                        <td><input type="text" name="is_wide"></td>
+                        <td><input type="text" name="is_wide" value="0"></td>
                     </tr>
                     <tr>
                         <td>is No?</td>
-                        <td><input type="text" name="is_no_ball"></td>
+                        <td><input type="text" name="is_no_ball" value="0"></td>
                     </tr>
                     <tr>
                         <td><input type="submit" name="add_ball" value="Add Ball" /></td>

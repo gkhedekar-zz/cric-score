@@ -1,5 +1,29 @@
 <html>
     <body>
+        <h2>Teams</h2>
+        <table>
+        {% for team in data.teams %}
+            <tr>
+                <td>{{ team.name }}</td>
+                <td><a href="{{ url_for('get_team', team_name=team.name) }}">Edit Team</a></td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <form name="create_team" action="{{ url_for('create_team') }}" method="POST">
+                    <td><input type="text" name="team_name"></td>
+                    <td><input type="submit" name="add_team" value="Add Team"></td>
+                </form>
+            </tr>
+        </table>
+
+        <h2>Recent Matches</h2>
+        <table>
+        {% for match in data.matches %}
+            <tr><td><a href="{{ url_for('show_match', match_id=match.id) }}">{{ match.team1.name }} vs {{ match.team2.name }}</a></td></tr>
+        {% endfor %}
+        </table>
+
+        <h2>Create Match</h2>
         <form name="create_match" method="POST" action="{{ url_for('create_match') }}">
             <table>
                 <tr>
