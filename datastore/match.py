@@ -47,13 +47,28 @@ class Match(Base, CricketBase):
                            .outerjoin(team2, cls.team1_name == team2.name)
             match = query.all()[0]
             match_dict = match.as_dict()
-            latest_ball, bowler_id, total_runs, runs = Ball.get_latest_ball(session, match.id)
-            latest_ball = latest_ball if latest_ball else 0
+
+            latest_ball_res = Ball.get_latest_ball(session, match.id)
+            latest_ball = latest_ball_res['latest_ball']
+            bowler_id = latest_ball_res['bowler_id']
+            total_runs = latest_ball_res['total_runs']
+            runs = latest_ball_res['runs']
+            is_wide = latest_ball_res['is_wide']
+            is_no_ball = latest_ball_res['is_no_ball']
+
+            # import pdb; pdb.set_trace()
+            total_wides = Ball.get_total_wides(session, match.id)
+            total_no_balls = Ball.get_total_no_balls(session, match.id)
+            total_byes = Ball.get_total_byes(session, match.id)
+
             match_dict['current_bowler'] = bowler_id if latest_ball%6 < 6 else ''
-            match_dict['over'] = str(latest_ball/6) +"."+ str(latest_ball%6)
-            match_dict['total_runs'] = total_runs
+            match_dict['over'] = get_over(latest_ball, is_wide, is_no_ball)
+            match_dict['total_runs'] = total_runs + total_wides + total_no_balls + total_byes
+            match_dict['wides'] = total_wides
+            match_dict['no_balls'] = total_no_balls
+            match_dict['byes'] = total_byes
             match_dict['last_ball'] = runs
-            match_dict['next_ball'] = latest_ball + 1
+            match_dict['next_ball'] = next_ball(latest_ball, is_wide, is_no_ball)
             match_dict['batting_score'] = get_batting_score(session, match)
             match_dict['bowling_score'] = get_bowling_score(session, match)
             return match_dict
@@ -78,7 +93,7 @@ def get_batting_score(session, match):
     batting_score = {}
     batting_team = match.team1 if match.first_inning == match.team1_name else match.team2
     for player in batting_team.players:
-        player_runs, balls_played = Ball.get_player_stats(session, player.id, match.id, 'batting')
+        player_runs, balls_played = Ball.get_batsman_stats(session, player.id, match.id)
         batting_score[player.id] = {'runs': player_runs, 'balls': balls_played}
     return batting_score
 
@@ -86,8 +101,21 @@ def get_bowling_score(session, match):
     bowling_score = {}
     bowling_team = match.team2 if match.first_inning == match.team1_name else match.team1
     for player in bowling_team.players:
-        num_runs, num_balls = Ball.get_player_stats(session, player.id, match.id, 'bowling')
+        num_runs, num_balls, wides, no_balls = Ball.get_bowler_stats(session, player.id, match.id)
         overs = str(num_balls/6) +"."+ str(num_balls%6)
-        bowling_score[player.id] = {'runs': num_runs, 'overs': overs}
+        bowling_score[player.id] = {'runs': num_runs, 'overs': overs, 'wides': wides, 'no_balls': no_balls}
     return bowling_score
+
+def get_over(latest_ball, is_wide, is_no_ball):
+    if is_wide or is_no_ball:
+        ball_num = latest_ball - 1
+    else:
+        ball_num = latest_ball
+    return str(ball_num/6) +"."+ str(ball_num%6)
+
+def next_ball(latest_ball, is_wide, is_no_ball):
+    if is_wide or is_no_ball:
+        return latest_ball
+    else:
+        return latest_ball + 1
 
